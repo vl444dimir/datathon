@@ -52,8 +52,8 @@ jobs:
       - run: docker compose config --quiet
       - name: Build and check the server
         run: |
-          docker compose up -d --build
-          curl --retry 20 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:8080/healthz
+          docker compose up -d --build --wait --wait-timeout 60
+          curl -fsS http://127.0.0.1:8080/healthz
           curl -fsS http://127.0.0.1:8080/ > /dev/null
           curl -fsS http://127.0.0.1:8080/data/households.json > /dev/null
           curl -fsS http://127.0.0.1:8080/materials/StatDatathon.pdf > /dev/null

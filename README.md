@@ -31,7 +31,7 @@ npm.cmd run preview
 ```bash
 git clone --depth 1 https://github.com/vl444dimir/datathon.git
 cd datathon
-docker compose up -d --build
+docker compose up -d --build --wait --wait-timeout 60
 docker compose ps
 curl -fsS http://127.0.0.1:8080/healthz
 ```
@@ -42,7 +42,7 @@ curl -fsS http://127.0.0.1:8080/healthz
 
 ```bash
 git pull --ff-only
-docker compose up -d --build
+docker compose up -d --build --wait --wait-timeout 60
 ```
 
 Для остановки: `docker compose down`. Для просмотра журнала: `docker compose logs --tail=100 web`. В контейнер попадают только собранная страница, агрегаты и PDF. Полный датасет, документы и секреты исключены из контекста сборки; база данных для текущей страницы не требуется.
