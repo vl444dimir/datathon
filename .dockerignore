@@ -1,0 +1,17 @@
+# Use an allowlist: datasets and unrelated project materials never enter the build context.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!vite.config.js
+!households_summary.json
+!scripts/
+!scripts/prepare-web.mjs
+!web/
+!web/**
+!deploy/
+!deploy/nginx.conf
+!submission/
+!submission/StatDatathon.pdf
+web/public/data/
+web/public/materials/

@@ -1,0 +1,67 @@
+name: Check web build
+
+on:
+  push:
+    paths:
+      - 'web/**'
+      - 'scripts/prepare-web.mjs'
+      - 'package*.json'
+      - 'vite.config.js'
+      - 'households_summary.json'
+      - 'submission/StatDatathon.pdf'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'compose.yaml'
+      - 'deploy/**'
+      - '.github/workflows/web-check.yml'
+  pull_request:
+    paths:
+      - 'web/**'
+      - 'scripts/prepare-web.mjs'
+      - 'package*.json'
+      - 'vite.config.js'
+      - 'households_summary.json'
+      - 'submission/StatDatathon.pdf'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'compose.yaml'
+      - 'deploy/**'
+      - '.github/workflows/web-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      WEB_BIND_ADDRESS: 127.0.0.1
+      WEB_PORT: 8080
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: docker compose config --quiet
+      - name: Build and check the server
+        run: |
+          docker compose up -d --build
+          curl --retry 20 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:8080/healthz
+          curl -fsS http://127.0.0.1:8080/ > /dev/null
+          curl -fsS http://127.0.0.1:8080/data/households.json > /dev/null
+          curl -fsS http://127.0.0.1:8080/materials/StatDatathon.pdf > /dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/analysis_households.py)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/.git/config)" = 403
+      - name: Server logs
+        if: failure()
+        run: docker compose logs --tail=100 web
+      - name: Stop the test server
+        if: always()
+        run: docker compose down

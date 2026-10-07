@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123c31" />
+    <meta name="description" content="StatDatathon 2026: состав домохозяйств и площадь жилья в синтетической выборке за 2021–2024 годы. Исследуйте данные и скачайте материалы." />
+    <title>StatDatathon — данные о пространстве для жизни</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#research">К исследованию</a>
+    <header class="header container">
+      <a class="brand" href="#" aria-label="StatDatathon — на главную">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>stat<span class="brand-light">datathon</span><span class="brand-year">2026</span></span>
+      </a>
+      <nav class="navigation" aria-label="Основная навигация">
+        <a href="#research">Исследование</a>
+        <a href="#methodology">Методология</a>
+        <a href="#materials">Материалы <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> DATA TO POLICY · КАЗАХСТАН</p>
+          <h1 id="hero-title">За цифрами —<br />пространство<br /><em>для жизни.</em></h1>
+          <p class="hero-description">Как состав домохозяйства связан с площадью жилья? Исследуем синтетические микроданные и делаем результаты понятными.</p>
+          <a class="button button-dark" href="#research">Исследовать данные <span aria-hidden="true">↗</span></a>
+          <div class="hero-meta"><span>2021–2024</span><span class="meta-line" aria-hidden="true"></span><span>Синтетическая выборка</span></div>
+        </div>
+
+        <div class="hero-visual" aria-label="Медианная общая площадь на человека в выборке 2024 года">
+          <div class="visual-top"><span class="visual-label">ПРОСТРАНСТВО НА ЧЕЛОВЕКА</span><span class="visual-year">2024</span></div>
+          <div class="visual-stat"><strong>12,7</strong><span>м²</span></div>
+          <p class="visual-description">медиана в домохозяйствах<br />из пяти и более человек</p>
+          <div class="mini-chart" aria-hidden="true">
+            <div class="mini-column" style="--height: 100%"><span>57,0</span><i></i><small>1</small></div>
+            <div class="mini-column" style="--height: 52.6%"><span>30,0</span><i></i><small>2</small></div>
+            <div class="mini-column" style="--height: 36.3%"><span>20,7</span><i></i><small>3</small></div>
+            <div class="mini-column" style="--height: 28.6%"><span>16,3</span><i></i><small>4</small></div>
+            <div class="mini-column highlighted" style="--height: 22.3%"><span>12,7</span><i></i><small>5+</small></div>
+          </div>
+          <div class="visual-bottom"><span>Число членов домохозяйства</span><span aria-hidden="true">↘</span></div>
+          <div class="visual-orbit" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <div class="dataset-strip container"><span class="dataset-tag">В ОСНОВЕ ИССЛЕДОВАНИЯ</span><span>D008 <b>Состав домохозяйств</b></span><span class="strip-plus" aria-hidden="true">+</span><span>D006 <b>Характеристики жилья</b></span><span class="strip-end">4 года данных <span aria-hidden="true">↗</span></span></div>
+
+      <section class="research container section" id="research" aria-labelledby="research-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">01 / ИССЛЕДОВАНИЕ</p><h2 id="research-title">Одни данные. Разные истории.</h2><p class="section-description">Выберите год, чтобы посмотреть состав выборки и площадь жилья.</p></div>
+          <label class="year-control">Год <select id="year-select" disabled><option value="2024">2024</option></select></label>
+        </div>
+        <p id="data-error" class="data-error" role="alert" hidden></p>
+        <noscript><p class="data-error">Включите JavaScript для переключения года и графиков. Материалы и методология доступны ниже.</p></noscript>
+        <div id="research-results" aria-busy="true">
+          <p id="data-status" class="sr-only" role="status">Загружаем показатели выборки.</p>
+          <div class="metrics-grid">
+            <article class="metric"><span class="metric-icon" aria-hidden="true">⌂</span><p>Домохозяйств в выборке</p><strong id="household-count">—</strong><span class="metric-note">Состав по форме D008</span></article>
+            <article class="metric"><span class="metric-icon" aria-hidden="true">◎</span><p>Человек в выборке</p><strong id="person-count">—</strong><span class="metric-note">Члены всех домохозяйств</span></article>
+            <article class="metric"><span class="metric-icon" aria-hidden="true">↗</span><p>Домохозяйств из 5+ человек</p><strong id="large-share">—</strong><span class="metric-note" id="large-count">—</span></article>
+            <article class="metric metric-accent"><span class="metric-icon" aria-hidden="true">✳</span><p>Домохозяйств с детьми</p><strong id="children-share">—</strong><span class="metric-note" id="children-note">Хотя бы один ребёнок до 18 лет</span></article>
+          </div>
+
+          <div class="analysis-grid">
+            <article class="chart-card">
+              <div class="chart-heading"><div><p class="card-kicker">ПЛОЩАДЬ И РАЗМЕР ДОМОХОЗЯЙСТВА</p><h3>Сколько места приходится на человека?</h3></div><span class="unit-badge">м² / чел.</span></div>
+              <div class="chart-options" role="group" aria-label="Вид площади"><button type="button" data-area="total" aria-pressed="true">Общая площадь</button><button type="button" data-area="living" aria-pressed="false">Жилая площадь</button></div>
+              <p class="chart-subtitle">Медиана на одного человека · <span id="chart-year">2024</span></p>
+              <div id="area-chart" class="bar-chart" aria-label="Площадь по размеру домохозяйства"></div>
+              <div class="chart-footer"><span id="area-sample">Загружаем данные…</span><span>Невзвешенная выборка</span></div>
+            </article>
+            <aside class="insight-card">
+              <span class="insight-icon" aria-hidden="true">↘</span><p class="card-kicker">ЧТО ВИДНО В ДАННЫХ</p>
+              <h3>Больше людей.<br /> Меньше места<br /> на каждого.</h3>
+              <p id="insight-text">Сравниваем медианную площадь на человека в домохозяйствах разного размера.</p>
+              <div class="insight-note"><span aria-hidden="true">ⓘ</span><p>Связь в синтетической выборке не доказывает причину и не описывает население страны.</p></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="methodology container section" id="methodology" aria-labelledby="method-title">
+        <div class="section-heading"><div><p class="eyebrow">02 / МЕТОДОЛОГИЯ</p><h2 id="method-title">Понятный путь от данных к выводу.</h2></div><span class="section-aside">Расчёты можно повторить</span></div>
+        <div class="steps-grid">
+          <article class="step"><span class="step-number">01</span><h3>Соединяем формы</h3><p>Состав домохозяйства из D008 связываем с характеристиками жилья из D006 по ключу NOMER.</p></article>
+          <article class="step"><span class="step-number">02</span><h3>Проверяем качество</h3><p>Для площади исключаем записи, где жилая площадь превышает общую. Проверяем дубликаты и состав домохозяйства.</p></article>
+          <article class="step"><span class="step-number">03</span><h3>Сравниваем медианы</h3><p>Делим площадь на число членов домохозяйства и сравниваем группы: 1, 2, 3, 4 и 5+ человек.</p></article>
+        </div>
+        <p class="method-note"><span aria-hidden="true">ⓘ</span> Все показатели рассчитаны на синтетических данных без весов. Это исследование выборки, а не оценка населения Казахстана.</p>
+      </section>
+
+      <section class="materials container section" id="materials" aria-labelledby="materials-title">
+        <div class="materials-copy"><p class="eyebrow">03 / МАТЕРИАЛЫ</p><h2 id="materials-title">Исследование<br />открыто для проверки.</h2><p>Презентация, итоговые показатели и код расчётов — чтобы пройти путь от вопроса до результата.</p></div>
+        <div class="resource-list">
+          <a class="resource" href="/materials/StatDatathon.pdf" download><span class="resource-icon" aria-hidden="true">↧</span><span><strong>Презентация исследования</strong><small>PDF · готовые материалы проекта</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
+          <a class="resource" href="/data/households.json" download><span class="resource-icon" aria-hidden="true">{ }</span><span><strong>Показатели за 2021–2024 годы</strong><small>JSON · агрегированные результаты</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
+          <a class="resource" href="https://github.com/vl444dimir/datathon" target="_blank" rel="noopener noreferrer"><span class="resource-icon" aria-hidden="true">&lt;/&gt;</span><span><strong>Код и исходные материалы</strong><small>GitHub · воспроизводимые расчёты</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer container"><a class="brand footer-brand" href="#">stat<span class="brand-light">datathon</span></a><p>Из данных — к понятным решениям.</p><span>2026 · Синтетические данные</span></footer>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "${WEB_BIND_ADDRESS:-0.0.0.0}:${WEB_PORT:-8080}:8080"
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true

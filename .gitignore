@@ -11,6 +11,12 @@ venv/
 Thumbs.db
 ~$*
 
+# Generated web build and copies of the aggregate data / presentation
+/dist/
+/web/public/data/
+/web/public/materials/
+/.web-check/
+
 # Credentials and local configuration
 .env
 .env.*
