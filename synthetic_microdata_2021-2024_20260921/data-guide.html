@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Synthetic survey microdata, 2021–2024</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Synthetic survey microdata, 2021–2024</h1>
+<h3 class="subtitle">236 tables · 72.6 million rows</h3>
+
+
+
+<style>
+body { max-width: 46rem; margin: 3rem auto; padding: 0 1.25rem 4rem;
+font: 16px/1.6 Georgia, "Times New Roman", serif; color: #1a1a1a;
+background: #fbfbf9; }
+h1 { font-size: 1.7rem; margin: 0 0 .2rem; }
+h1.title { margin-bottom: .2rem; }
+h2 { font-size: 1.15rem; margin: 2.2rem 0 .6rem; padding-bottom: .25rem;
+border-bottom: 1px solid #d8d8d2; }
+.subtitle { color: #5b5b5b; font-style: italic; margin: 0 0 2rem; font-size: 1rem; }
+table { border-collapse: collapse; width: 100%; margin: .8rem 0; font-size: .92rem; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid #d8d8d2; }
+code { font: .88em ui-monospace, Menlo, Consolas, monospace; background: #efefe9;
+padding: .08em .3em; border-radius: 3px; }
+blockquote { border-left: 3px solid #8a4b00; background: #fdf6ee; margin: 1rem 0;
+padding: .7rem 1rem; color: #8a4b00; font-weight: 600; }
+blockquote p { margin: 0; }
+@media print { body { background: #fff; margin: 0; } }
+</style>
+<p>These tables have been generated based on deidentified survey
+microdata. They follow the <strong>structure</strong> of the originals.
+They have the same forms, columns (mostly), and keys. They can be joined
+between forms and across years.</p>
+<div id="what-is-here" class="section level2">
+<h2>What is here</h2>
+<table>
+<colgroup>
+<col width="18%" />
+<col width="45%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>Form</th>
+<th align="right">Tables</th>
+<th align="right">Rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1t_god</code></td>
+<td>1-Т annual, enterprise labor</td>
+<td align="right">4</td>
+<td align="right">30,025,899</td>
+</tr>
+<tr class="even">
+<td><code>1t_kv</code></td>
+<td>1-Т quarterly</td>
+<td align="right">16</td>
+<td align="right">24,480,242</td>
+</tr>
+<tr class="odd">
+<td><code>d004</code></td>
+<td>Household budget, quarterly (12 tables/quarter)</td>
+<td align="right">192</td>
+<td align="right">8,612,484</td>
+</tr>
+<tr class="even">
+<td><code>2t</code></td>
+<td>2-Т, pay</td>
+<td align="right">4</td>
+<td align="right">7,328,814</td>
+</tr>
+<tr class="odd">
+<td><code>t001</code></td>
+<td>Т-001, labor force</td>
+<td align="right">4</td>
+<td align="right">1,885,110</td>
+</tr>
+<tr class="even">
+<td><code>d008</code></td>
+<td>Household roster (persons)</td>
+<td align="right">4</td>
+<td align="right">169,059</td>
+</tr>
+<tr class="odd">
+<td><code>d002</code></td>
+<td>Subject &amp; assessment</td>
+<td align="right">8</td>
+<td align="right">95,542</td>
+</tr>
+<tr class="even">
+<td><code>d006</code></td>
+<td>Dwelling</td>
+<td align="right">4</td>
+<td align="right">46,743</td>
+</tr>
+</tbody>
+</table>
+<p>One <code>.csv</code> per original table (UTF-8), laid out as
+<code>&lt;form&gt;/&lt;year&gt;/[&lt;quarter&gt;/]&lt;table&gt;.csv</code>
+— the same shape and the same file names as the source.
+<code>MANIFEST.csv</code> lists every table with its synthetic and real
+row and column counts.</p>
+</div>
+<div id="how-the-tables-join" class="section level2">
+<h2>How the tables join</h2>
+<p><strong><code>NOMER</code> is the household key</strong> and it works
+exactly as in the real data. Within a year it links the roster
+(<code>d008</code>), the dwelling (<code>d006</code>), the attitudes
+tables (<code>d002</code>) and all 48 quarterly budget tables
+(<code>d004</code>). A person is <code>NOMER</code> +
+<code>NOMP</code>.</p>
+<p>These joins hold <em>by construction.</em> The households are
+generated once as a backbone and then every form is drawn from it. In
+the shipped tables, every <code>d006</code> row resolves to a household
+and <code>TE</code>/<code>K</code> agree with the roster for 100% of
+them.</p>
+<p><strong><code>ID</code> is the enterprise key</strong> in 1-Т and
+2-Т. Synthetic ids look like <code>S-2t-2023-000001</code>; real ids are
+all digits, so no synthetic id can collide with a real one.</p>
+<p><strong>The same household and the same enterprise recur across
+years</strong>, so over-time analysis is possible.</p>
+</div>
+<div id="reading-the-values" class="section level2">
+<h2>Reading the values</h2>
+<p>Almost every field is a numeric <em>code</em>, as in the source —
+<code>POL</code> is sex, but whether <code>1</code> is male is not
+documented for most forms. Value codebooks exist for most of the forms
+and sit in the <code>documentation</code> folder. I suggest that you
+carve out some time to examine those codebooks.</p>
+<p>Open the files with any tool that reads CSV. Do not open the large
+ones in Excel: several tables exceed its 1,048,576-row limit and it will
+silently truncate them.</p>
+</div>
+<div id="the-original-documentation" class="section level2">
+<h2>The original documentation</h2>
+<p>The folder <code>documentation/</code> holds the material that
+shipped inside the source archives, organised by form and year:
+<strong>36</strong> table-structure documents, <strong>45</strong>
+reference books and code lists, <strong>15</strong> blank questionnaires
+and <strong>3</strong> interviewer instructions.
+<code>documentation/INDEX.csv</code> lists them all with what each one
+is.</p>
+<p>These describe the forms, not any respondent, and they are the
+authority on what a column means. Note that the same filename can hold
+different content in different years, which is why the folder keeps the
+year structure.</p>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
+<blockquote>
+<p>A few words on the difference between synthetic and real data.</p>
+</blockquote>
+<table>
+<colgroup>
+<col width="72%" />
+<col width="27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Limitation</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sythesis shrinks standard errors a little.</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>Associations <em>between</em> variables are roughly halved. Signs
+are right in almost all the cases, but the effect size also shrinks. You
+may treat coefficient estimates as lower bounds for real effects.</td>
+<td>dwelling area on household size 0.100 vs 0.171</td>
+</tr>
+<tr class="odd">
+<td>Year-to-year persistence in the 1-Т panel is about half the real
+value</td>
+<td>0.49 / 0.24 vs 0.93 / 0.79</td>
+</tr>
+<tr class="even">
+<td>Row counts differ slightly: coverage and rows-per-unit are modelled,
+not copied</td>
+<td>median +0.13% / −0.23%</td>
+</tr>
+<tr class="odd">
+<td>Т-001 have been generated on 40 out of the original 154 columns.
+Most of those columns had more than 90% of missing values anyways.</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>In 2021 the respondent’s age is not tied to the person named — that
+year’s roster has no birth year at all</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>D-004’s <code>kv_vopr1</code> repeats items within a household more
+than the real data does</td>
+<td>15% of rows vs 2.4%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

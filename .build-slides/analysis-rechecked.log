@@ -1,0 +1,241 @@
+{
+  "scope": "Synthetic survey microdata; unweighted sample statistics",
+  "years": [
+    {
+      "year": 2021,
+      "source_files": [
+        "d006\\2021\\rio.csv",
+        "d008\\2021\\kontr_k.csv"
+      ],
+      "dwelling_rows": 11636,
+      "roster_households": 12000,
+      "roster_person_rows": 41868,
+      "dwellings_linked_to_roster": 11636,
+      "roster_linked_to_dwellings": 11636,
+      "duplicate_dwelling_keys": 0,
+      "duplicate_person_keys": 0,
+      "household_size_mismatches": 0,
+      "size_distribution": {
+        "1": 1570,
+        "2": 2834,
+        "3": 2326,
+        "4": 1992,
+        "5+": 3278
+      },
+      "median_household_size": 3.0,
+      "mean_household_size": 3.49,
+      "valid_birth_years": 0,
+      "age_reference": "31 December 2021; year minus birth year",
+      "children_under_18": null,
+      "households_with_child": null,
+      "inconsistent_area_households_excluded": 36,
+      "area_valid_households": 11600,
+      "median_total_area_per_person_m2": 20.5,
+      "median_total_area_per_person_by_size_m2": {
+        "1": 56.0,
+        "2": 30.0,
+        "3": 20.0,
+        "4": 15.6,
+        "5+": 12.4
+      },
+      "median_total_area_by_size_m2": {
+        "1": 56.0,
+        "2": 60.0,
+        "3": 60.0,
+        "4": 62.5,
+        "5+": 71.0
+      },
+      "area_valid_by_size": {
+        "1": 1494,
+        "2": 2732,
+        "3": 2254,
+        "4": 1942,
+        "5+": 3178
+      },
+      "median_living_area_per_person_by_size_m2": {
+        "1": 38.0,
+        "2": 20.5,
+        "3": 14.0,
+        "4": 10.8,
+        "5+": 8.4
+      }
+    },
+    {
+      "year": 2022,
+      "source_files": [
+        "d006\\2022\\rio2022.csv",
+        "d008\\2022\\kontr_k.csv"
+      ],
+      "dwelling_rows": 11744,
+      "roster_households": 12000,
+      "roster_person_rows": 42681,
+      "dwellings_linked_to_roster": 11744,
+      "roster_linked_to_dwellings": 11744,
+      "duplicate_dwelling_keys": 0,
+      "duplicate_person_keys": 0,
+      "household_size_mismatches": 0,
+      "size_distribution": {
+        "1": 1599,
+        "2": 2721,
+        "3": 2204,
+        "4": 2001,
+        "5+": 3475
+      },
+      "median_household_size": 3.0,
+      "mean_household_size": 3.56,
+      "valid_birth_years": 42681,
+      "age_reference": "31 December 2022; year minus birth year",
+      "children_under_18": 13950,
+      "households_with_child": 6773,
+      "inconsistent_area_households_excluded": 48,
+      "area_valid_households": 11696,
+      "median_total_area_per_person_m2": 20.7,
+      "median_total_area_per_person_by_size_m2": {
+        "1": 54.0,
+        "2": 30.0,
+        "3": 20.7,
+        "4": 15.8,
+        "5+": 12.6
+      },
+      "median_total_area_by_size_m2": {
+        "1": 54.0,
+        "2": 60.0,
+        "3": 62.0,
+        "4": 63.0,
+        "5+": 74.0
+      },
+      "area_valid_by_size": {
+        "1": 1519,
+        "2": 2655,
+        "3": 2154,
+        "4": 1962,
+        "5+": 3406
+      },
+      "median_living_area_per_person_by_size_m2": {
+        "1": 37.0,
+        "2": 20.5,
+        "3": 14.3,
+        "4": 11.0,
+        "5+": 8.7
+      }
+    },
+    {
+      "year": 2023,
+      "source_files": [
+        "d006\\2023\\rio2023.csv",
+        "d008\\2023\\kontr_k.csv"
+      ],
+      "dwelling_rows": 11659,
+      "roster_households": 12000,
+      "roster_person_rows": 42689,
+      "dwellings_linked_to_roster": 11659,
+      "roster_linked_to_dwellings": 11659,
+      "duplicate_dwelling_keys": 0,
+      "duplicate_person_keys": 0,
+      "household_size_mismatches": 0,
+      "size_distribution": {
+        "1": 1667,
+        "2": 2692,
+        "3": 2200,
+        "4": 1906,
+        "5+": 3535
+      },
+      "median_household_size": 3.0,
+      "mean_household_size": 3.56,
+      "valid_birth_years": 42689,
+      "age_reference": "31 December 2023; year minus birth year",
+      "children_under_18": 14288,
+      "households_with_child": 6750,
+      "inconsistent_area_households_excluded": 44,
+      "area_valid_households": 11615,
+      "median_total_area_per_person_m2": 20.5,
+      "median_total_area_per_person_by_size_m2": {
+        "1": 56.0,
+        "2": 30.0,
+        "3": 20.3,
+        "4": 16.0,
+        "5+": 12.4
+      },
+      "median_total_area_by_size_m2": {
+        "1": 56.0,
+        "2": 60.0,
+        "3": 61.0,
+        "4": 64.0,
+        "5+": 72.0
+      },
+      "area_valid_by_size": {
+        "1": 1585,
+        "2": 2602,
+        "3": 2148,
+        "4": 1852,
+        "5+": 3428
+      },
+      "median_living_area_per_person_by_size_m2": {
+        "1": 38.0,
+        "2": 20.5,
+        "3": 14.0,
+        "4": 11.0,
+        "5+": 8.4
+      }
+    },
+    {
+      "year": 2024,
+      "source_files": [
+        "d006\\2024\\rio_2024.csv",
+        "d008\\2024\\kontr_k.csv"
+      ],
+      "dwelling_rows": 11704,
+      "roster_households": 12000,
+      "roster_person_rows": 41821,
+      "dwellings_linked_to_roster": 11704,
+      "roster_linked_to_dwellings": 11704,
+      "duplicate_dwelling_keys": 0,
+      "duplicate_person_keys": 0,
+      "household_size_mismatches": 0,
+      "size_distribution": {
+        "1": 1726,
+        "2": 2846,
+        "3": 2185,
+        "4": 1889,
+        "5+": 3354
+      },
+      "median_household_size": 3.0,
+      "mean_household_size": 3.49,
+      "valid_birth_years": 41821,
+      "age_reference": "31 December 2024; year minus birth year",
+      "children_under_18": 14032,
+      "households_with_child": 6700,
+      "inconsistent_area_households_excluded": 46,
+      "area_valid_households": 11658,
+      "median_total_area_per_person_m2": 21.5,
+      "median_total_area_per_person_by_size_m2": {
+        "1": 57.0,
+        "2": 30.0,
+        "3": 20.7,
+        "4": 16.3,
+        "5+": 12.7
+      },
+      "median_total_area_by_size_m2": {
+        "1": 57.0,
+        "2": 60.0,
+        "3": 62.0,
+        "4": 65.0,
+        "5+": 73.0
+      },
+      "area_valid_by_size": {
+        "1": 1649,
+        "2": 2778,
+        "3": 2136,
+        "4": 1826,
+        "5+": 3269
+      },
+      "median_living_area_per_person_by_size_m2": {
+        "1": 40.0,
+        "2": 20.5,
+        "3": 14.0,
+        "4": 11.3,
+        "5+": 8.6
+      }
+    }
+  ]
+}

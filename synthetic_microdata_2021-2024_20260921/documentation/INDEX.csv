@@ -1,0 +1,100 @@
+form,year,kind,path,bytes
+1t_god,2021,table structure,1t_god/2021/структура 2018-2022 по 1Тгод.xls,35840
+1t_god,2022,table structure,1t_god/2022/структура 2018-2022 по 1Тгод.xls,35840
+1t_god,2023,table structure,1t_god/2023/структура 2023 по 1Тгод.xls,35840
+1t_god,2024,table structure,1t_god/2024/1T__GOD_12_2024_parol2025/структура 2024 по 1Тгод.xls,24064
+1t_kv,2021,table structure,1t_kv/2021/2021_1Т(квартал)/структура 2021-2023 по 1Ткв.xls,25088
+1t_kv,2022,table structure,1t_kv/2022/2022_1Т(квартал)_1-4кв/структура 2021-2023 по 1Ткв.xls,25088
+1t_kv,2023,table structure,1t_kv/2023/2023_1Т(квартал)_1-4кв/структура 2021-2023 по 1Ткв.xls,25088
+1t_kv,2024,table structure,1t_kv/2024/структура 2024 по 1Ткв.xls,24064
+2t,2021,reference book,2t/2021/ГСДПРС для 2-Т_профессия.xls,1655808
+2t,2021,reference book,2t/2021/справочник образования для 2-Т.xls,30208
+2t,2021,table structure,2t/2021/структура 2Т(оплата труда)_2019-2022.xls,30208
+2t,2022,reference book,2t/2022/ГСДПРС для 2-Т_профессия.xls,1655808
+2t,2022,reference book,2t/2022/справочник образования для 2-Т.xls,30208
+2t,2022,table structure,2t/2022/структура 2Т(оплата труда)_2019-2022.xls,30208
+2t,2023,reference book,2t/2023/ГСДПРС для 2-Т_профессия.xls,1655808
+2t,2023,reference book,2t/2023/справочник образования для 2-Т.xls,30208
+2t,2023,table structure,2t/2023/структура 2Т(оплата труда)_2023.xls,30208
+2t,2024,table structure,2t/2024/структура 2Т_год.xls,29696
+d001,2024,blank form,d001/2024/D001_2024/Д001 бланк/Бюджет времени рус/Д001.doc,988160
+d001,2024,interviewer instruction,d001/2024/D001_2024/Д001 бланк/Бюджет времени рус/Инструкция к Д001 рус.doc,38400
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/Справ_ 2064_прил4.xls,21504
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/Справ_2063_прил5.xls,20480
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/Справ_2065_прил3.xls,61440
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/Справ_2066_прил7.xls,34816
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/Справ_6372_прил6.xls,34304
+d001,2024,reference book,d001/2024/D001_2024/Д001_справочники/справочник времени.xls,38400
+d001,2024,table structure,d001/2024/D001_2024/Структура.xls,23552
+d002,2021,blank form,d002/2021/Д002/D 002 форма.pdf,364310
+d002,2021,table structure,d002/2021/Д002/Структура файлов.xls,30208
+d002,2022,table structure,d002/2022/D002/Структура файлов2022.xls,36864
+d002,2022,blank form,d002/2022/D002/Форма D 002_2022.docx,106310
+d002,2023,interviewer instruction,d002/2023/Д-002 инструкция.pdf,173461
+d002,2023,blank form,"d002/2023/Д002- каз,рус.pdf",424984
+d002,2023,table structure,d002/2023/Структура файлов_D002_2023.xls,40448
+d002,2024,interviewer instruction,d002/2024/Д-002 инструкция.pdf,173461
+d002,2024,blank form,"d002/2024/Д002- каз,рус.pdf",424984
+d002,2024,table structure,d002/2024/Структура файлов_D002_2024.xls,40448
+d004,2021,table structure,d004/2021/Структура D004.doc,64512
+d004,2021,blank form,d004/2021/д004 форма рус.pdf,775791
+d004,2021,reference book,d004/2021/коды/kv_vopr1 (непроды).xls,80384
+d004,2021,reference book,d004/2021/коды/kv_vopr12_Заемные средства.xls,27648
+d004,2021,reference book,d004/2021/коды/kv_vopr2(коммунальные).xls,14848
+d004,2021,reference book,d004/2021/коды/kv_vopr3(связь).xls,22528
+d004,2021,reference book,d004/2021/коды/kv_vopr4(образование).xls,22528
+d004,2021,reference book,d004/2021/коды/kv_vopr5(здравоохранение).xls,20480
+d004,2021,reference book,d004/2021/коды/kv_vopr6 (индивидуальные).xls,23552
+d004,2021,reference book,d004/2021/коды/kv_vopr6 (отдых и культура).xls,15872
+d004,2021,reference book,d004/2021/коды/kv_vopr6(проч_финансовые_расходы).xls,15360
+d004,2021,reference book,d004/2021/коды/kv_vopr7(транспорт).xls,14848
+d004,2021,reference book,d004/2021/коды/kv_vopr9_10 (производство -Раздел4).xls,35840
+d004,2022,table structure,d004/2022/Структура D004.doc,60416
+d004,2022,blank form,d004/2022/д004 форма рус.pdf,775791
+d004,2022,reference book,d004/2022/коды/kv_vopr1 (непроды).xls,80384
+d004,2022,reference book,d004/2022/коды/kv_vopr12_Заемные средства.xls,27648
+d004,2022,reference book,d004/2022/коды/kv_vopr2(коммунальные).xls,14848
+d004,2022,reference book,d004/2022/коды/kv_vopr3(связь).xls,22528
+d004,2022,reference book,d004/2022/коды/kv_vopr4(образование).xls,22528
+d004,2022,reference book,d004/2022/коды/kv_vopr5(здравоохранение).xls,20480
+d004,2022,reference book,d004/2022/коды/kv_vopr6 (индивидуальные).xls,23552
+d004,2022,reference book,d004/2022/коды/kv_vopr6 (отдых и культура).xls,15872
+d004,2022,reference book,d004/2022/коды/kv_vopr6(проч_финансовые_расходы).xls,15360
+d004,2022,reference book,d004/2022/коды/kv_vopr7(транспорт).xls,14848
+d004,2022,reference book,d004/2022/коды/kv_vopr9_10 (производство -Раздел4).xls,35840
+d004,2023,table structure,d004/2023/Структура D004.doc,64512
+d004,2023,blank form,d004/2023/д004 форма рус.pdf,775791
+d004,2023,reference book,d004/2023/коды/kv_vopr1 (непроды).xls,56832
+d004,2023,reference book,d004/2023/коды/kv_vopr12_Заемные средства.xls,27648
+d004,2023,reference book,d004/2023/коды/kv_vopr2(коммунальные).xls,14848
+d004,2023,reference book,d004/2023/коды/kv_vopr3(связь).xls,22016
+d004,2023,reference book,d004/2023/коды/kv_vopr4(образование).xls,22016
+d004,2023,reference book,d004/2023/коды/kv_vopr5(здравоохранение).xls,19968
+d004,2023,reference book,d004/2023/коды/kv_vopr6 (индивидуальные).xls,22528
+d004,2023,reference book,d004/2023/коды/kv_vopr6 (отдых и культура).xls,15872
+d004,2023,reference book,d004/2023/коды/kv_vopr6(проч_финансовые_расходы).xls,15360
+d004,2023,reference book,d004/2023/коды/kv_vopr7(транспорт).xls,14336
+d004,2023,reference book,d004/2023/коды/kv_vopr9_10 (производство -Раздел4).xls,35840
+d004,2024,table structure,d004/2024/d004_1kv2024parol2025/D004_1kv2024/Структура D004.doc,66048
+d004,2024,table structure,d004/2024/d004_2kv2024parol2025/D004_2kv2024/Структура D004.doc,66048
+d004,2024,table structure,d004/2024/d004_3kv2024parol2025/D004_3kv2024/Структура D004.doc,66048
+d004,2024,table structure,d004/2024/d004_4kv2024parol2025/D004_4kv2024/Структура D004.doc,66048
+d006,2021,blank form,d006/2021/Анкета Д006 рус.doc,263680
+d006,2021,table structure,d006/2021/структураД006.doc,80896
+d006,2022,blank form,d006/2022/Анкета Д006 рус.doc,263680
+d006,2022,table structure,d006/2022/структураД006.doc,80896
+d006,2023,blank form,d006/2023/Анкета Д006 рус.doc,263680
+d006,2023,table structure,d006/2023/структураД006.doc,80896
+d006,2024,blank form,d006/2024/D006_deid/Анкета Д006 рус.doc,263680
+d006,2024,table structure,d006/2024/D006_deid/структураД006.doc,80896
+d008,2021,table structure,d008/2021/Структура D008.doc,53248
+d008,2021,blank form,d008/2021/форма D 008 рус.docx,45141
+d008,2022,table structure,d008/2022/D008/Структура D008.doc,51712
+d008,2022,blank form,d008/2022/D008/форма D 008 рус.docx,45141
+d008,2023,table structure,d008/2023/Структура D008.doc,51712
+d008,2023,blank form,d008/2023/форма D 008 рус.docx,45141
+d008,2024,table structure,d008/2024/D008_2024/Структура D008.doc,60416
+t001,2021,table structure,t001/2021/СТРУКТУРА_2016-2022гг.doc,47104
+t001,2022,table structure,t001/2022/СТРУКТУРА_2022-2024гг.doc,47104
+t001,2023,table structure,t001/2023/СТРУКТУРА_2022-2024гг.doc,47104
+t001,2024,table structure,t001/2024/СТРУКТУРА_2022-2024гг.doc,47104

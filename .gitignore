@@ -1,0 +1,30 @@
+# Local dependencies and temporary chart workbooks
+node_modules/
+.chart-data*/
+.local-archive/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+Thumbs.db
+~$*
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# The complete input dataset is attached to the GitHub release.
+# Keep the analysis inputs and all documentation directly in Git.
+/synthetic_microdata_2021-2024_20260921/*
+!/synthetic_microdata_2021-2024_20260921/d006/
+!/synthetic_microdata_2021-2024_20260921/d008/
+!/synthetic_microdata_2021-2024_20260921/documentation/
+!/synthetic_microdata_2021-2024_20260921/data-guide.html
+!/synthetic_microdata_2021-2024_20260921/data-guide.Rmd
+!/synthetic_microdata_2021-2024_20260921/MANIFEST.csv

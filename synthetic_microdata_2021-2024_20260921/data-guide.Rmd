@@ -1,0 +1,114 @@
+---
+title: "Synthetic survey microdata, 2021–2024"
+subtitle: "236 tables · 72.6 million rows"
+output:
+  html_document:
+    theme: null
+    self_contained: true
+    highlight: null
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{=html}
+<style>
+body { max-width: 46rem; margin: 3rem auto; padding: 0 1.25rem 4rem;
+       font: 16px/1.6 Georgia, "Times New Roman", serif; color: #1a1a1a;
+       background: #fbfbf9; }
+h1 { font-size: 1.7rem; margin: 0 0 .2rem; }
+h1.title { margin-bottom: .2rem; }
+h2 { font-size: 1.15rem; margin: 2.2rem 0 .6rem; padding-bottom: .25rem;
+     border-bottom: 1px solid #d8d8d2; }
+.subtitle { color: #5b5b5b; font-style: italic; margin: 0 0 2rem; font-size: 1rem; }
+table { border-collapse: collapse; width: 100%; margin: .8rem 0; font-size: .92rem; }
+th, td { text-align: left; padding: .35rem .6rem; border-bottom: 1px solid #d8d8d2; }
+code { font: .88em ui-monospace, Menlo, Consolas, monospace; background: #efefe9;
+       padding: .08em .3em; border-radius: 3px; }
+blockquote { border-left: 3px solid #8a4b00; background: #fdf6ee; margin: 1rem 0;
+             padding: .7rem 1rem; color: #8a4b00; font-weight: 600; }
+blockquote p { margin: 0; }
+@media print { body { background: #fff; margin: 0; } }
+</style>
+```
+
+These tables have been generated based on deidentified survey microdata.
+They follow the **structure** of the originals. They have the same
+forms, columns (mostly), and keys. They can be joined between forms and
+across years.
+
+## What is here
+
+| Folder   | Form                                            | Tables |       Rows |
+|-------------|---------------------------------|------------:|------------:|
+| `1t_god` | 1-Т annual, enterprise labor                    |      4 | 30,025,899 |
+| `1t_kv`  | 1-Т quarterly                                   |     16 | 24,480,242 |
+| `d004`   | Household budget, quarterly (12 tables/quarter) |    192 |  8,612,484 |
+| `2t`     | 2-Т, pay                                        |      4 |  7,328,814 |
+| `t001`   | Т-001, labor force                              |      4 |  1,885,110 |
+| `d008`   | Household roster (persons)                      |      4 |    169,059 |
+| `d002`   | Subject & assessment                            |      8 |     95,542 |
+| `d006`   | Dwelling                                        |      4 |     46,743 |
+
+One `.csv` per original table (UTF-8), laid out as
+`<form>/<year>/[<quarter>/]<table>.csv` — the same shape and the same
+file names as the source. `MANIFEST.csv` lists every table with its
+synthetic and real row and column counts.
+
+## How the tables join
+
+**`NOMER` is the household key** and it works exactly as in the real
+data. Within a year it links the roster (`d008`), the dwelling (`d006`),
+the attitudes tables (`d002`) and all 48 quarterly budget tables
+(`d004`). A person is `NOMER` + `NOMP`.
+
+These joins hold *by construction.* The households are generated once as
+a backbone and then every form is drawn from it. In the shipped tables,
+every `d006` row resolves to a household and `TE`/`K` agree with the
+roster for 100% of them.
+
+**`ID` is the enterprise key** in 1-Т and 2-Т. Synthetic ids look like
+`S-2t-2023-000001`; real ids are all digits, so no synthetic id can
+collide with a real one.
+
+**The same household and the same enterprise recur across years**, so
+over-time analysis is possible.
+
+## Reading the values
+
+Almost every field is a numeric *code*, as in the source — `POL` is sex,
+but whether `1` is male is not documented for most forms. Value
+codebooks exist for most of the forms and sit in the `documentation`
+folder. I suggest that you carve out some time to examine those
+codebooks.
+
+Open the files with any tool that reads CSV. Do not open the large ones
+in Excel: several tables exceed its 1,048,576-row limit and it will
+silently truncate them.
+
+## The original documentation
+
+The folder `documentation/` holds the material that shipped inside the
+source archives, organised by form and year: **36** table-structure
+documents, **45** reference books and code lists, **15** blank
+questionnaires and **3** interviewer instructions.
+`documentation/INDEX.csv` lists them all with what each one is.
+
+These describe the forms, not any respondent, and they are the authority
+on what a column means. Note that the same filename can hold different
+content in different years, which is why the folder keeps the year
+structure.
+
+## Limitations
+
+> A few words on the difference between synthetic and real data.
+
+| Limitation | Measured |
+|----------------------------------------------------|--------------------|
+| Sythesis shrinks standard errors a little. | — |
+| Associations *between* variables are roughly halved.  Signs are right in almost all the cases, but the effect size also shrinks. You may treat coefficient estimates as lower bounds for real effects. | dwelling area on household size 0.100 vs 0.171 |
+| Year-to-year persistence in the 1-Т panel is about half the real value | 0.49 / 0.24 vs 0.93 / 0.79 |
+| Row counts differ slightly: coverage and rows-per-unit are modelled, not copied | median +0.13% / −0.23% |
+| Т-001 have been generated on 40 out of the original 154 columns. Most of those columns had more than 90% of missing values anyways. | — |
+| In 2021 the respondent's age is not tied to the person named — that year's roster has no birth year at all | — |
+| D-004's `kv_vopr1` repeats items within a household more than the real data does | 15% of rows vs 2.4% |
