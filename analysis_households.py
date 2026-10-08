@@ -1,7 +1,8 @@
 """Reproducible descriptive statistics for the StatDatathon screening slides.
 
-Uses only the supplied synthetic D006 dwelling and D008 roster tables.
-Outputs sample statistics, not population estimates.
+Uses the synthetic D006 dwelling, D008 roster and D004 budget tables
+(kv_vopr0 participation, kv_vopr11 incomes). Outputs sample statistics,
+not population estimates.
 """
 
 from __future__ import annotations
@@ -31,7 +32,25 @@ REGIONS = {
     "63": "Восточно-Казахстанская", "71": "г. Астана", "75": "г. Алматы", "79": "г. Шымкент",
 }
 LOCALITIES = {"1": "город", "2": "село"}
-AREA_BIN_CAP = 60  # total m² per person, floored; the last bin means 60 and more
+AREA_BIN_CAP = 26  # total m² per person, floored; the last bin means 26 and more
+CROWDING_THRESHOLD = 15  # m² per person, lower bound of the state housing norm (15–18 m²)
+
+# D004 section 3 "Доходы": GR1–GR23 follow the rows of the questionnaire.
+INCOME_ITEMS = {
+    1: "работа по найму", 2: "работа не по найму", 3: "из него продажа сельхозпродукции",
+    4: "пенсии по возрасту", 5: "стипендии", 6: "адресная социальная помощь",
+    7: "жилищная помощь", 8: "пособия семьям с детьми", 9: "государственное социальное пособие",
+    10: "специальное государственное пособие", 11: "другие трансферты от государства",
+    12: "социальные трансферты в натуральной форме", 13: "материальная помощь в денежной форме",
+    14: "материальная помощь в натуральной форме", 15: "прочие трансферты", 16: "алименты",
+    17: "продажа недвижимости", 18: "продажа личного имущества", 19: "доход от собственности",
+    20: "сдача жилья в аренду", 21: "сдача в аренду земли и техники",
+    22: "прочие денежные поступления", 23: "дотации и льготы",
+}
+# Money income: excludes GR3 (already inside GR2), in-kind items (12, 14, 23)
+# and asset sales (17, 18), which are not income.
+MONEY_INCOME_ITEMS = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 19, 20, 21, 22]
+PROGRAMMES = {"housing_assistance": 7, "targeted_social_assistance": 6, "child_benefits": 8}
 
 
 def read_rows(path: Path):
@@ -49,6 +68,45 @@ def as_positive_float(value: str):
 
 def median(values):
     return float(Decimal(str(statistics.median(values))).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)) if values else None
+
+
+def as_number(value: str):
+    try:
+        result = float(value)
+    except (TypeError, ValueError):
+        return 0.0
+    return result if math.isfinite(result) else 0.0
+
+
+def load_income(year: int):
+    """Mean quarterly money income per household over the quarters it took part in."""
+    quarters = defaultdict(set)
+    totals = defaultdict(float)
+    programmes = defaultdict(set)
+    for folder in sorted((ROOT / "d004" / str(year)).iterdir()):
+        for row in read_rows(folder / "kv_vopr0.csv"):
+            if row["REZ"] == "1":
+                quarters[row["NOMER"]].add(folder.name)
+        for row in read_rows(folder / "kv_vopr11.csv"):
+            if folder.name not in quarters[row["NOMER"]]:
+                continue
+            totals[row["NOMER"]] += sum(as_number(row[f"GR{item}"]) for item in MONEY_INCOME_ITEMS)
+            for name, item in PROGRAMMES.items():
+                if as_number(row[f"GR{item}"]) > 0:
+                    programmes[row["NOMER"]].add(name)
+    return {
+        key: {"monthly": totals[key] / len(done) / 3, "quarters": len(done), "programmes": programmes[key]}
+        for key, done in quarters.items() if done
+    }
+
+
+def quantile_bounds(values, parts=5):
+    ordered = sorted(values)
+    return [ordered[min(len(ordered) - 1, math.ceil(len(ordered) * i / parts) - 1)] for i in range(1, parts)]
+
+
+def share(part, whole):
+    return round(part / whole, 4) if whole else None
 
 
 def analyse_year(year: int):
@@ -81,7 +139,8 @@ def analyse_year(year: int):
     living_area_by_size = defaultdict(list)
     all_area_per_person = []
     inconsistent_area_households = 0
-    crowding_cells = Counter()
+    income = load_income(year)
+    records = []
     valid_birth_years = 0
     children = 0
     households_with_child = 0
@@ -123,10 +182,41 @@ def analyse_year(year: int):
             # Children bucket 0-4 (4 = four or more, "многодетная" in Kazakhstan);
             # None when the household has no usable birth years (all of 2021).
             child_bucket = min(household_children, 4) if household_births else None
-            area_bin = min(math.floor(total / size), AREA_BIN_CAP)
-            crowding_cells[(dwelling["TE"], dwelling["K"], child_bucket, area_bin)] += 1
+            budget = income.get(key)
+            records.append({
+                "region": dwelling["TE"], "locality": dwelling["K"], "children": child_bucket,
+                "area_per_person": total / size,
+                "income_per_capita": budget["monthly"] / size if budget else None,
+                "programmes": budget["programmes"] if budget else set(),
+            })
         if living is not None:
             living_area_by_size[group].append(living / size)
+
+    # Income quintiles of monthly money income per capita among households with valid area.
+    bounds = quantile_bounds([r["income_per_capita"] for r in records if r["income_per_capita"] is not None])
+    crowding_cells = Counter()
+    by_quintile = defaultdict(Counter)
+    reach = defaultdict(Counter)
+    for record in records:
+        pc = record["income_per_capita"]
+        record["quintile"] = None if pc is None else 1 + sum(pc > bound for bound in bounds)
+        crowded = record["area_per_person"] < CROWDING_THRESHOLD
+        area_bin = min(math.floor(record["area_per_person"]), AREA_BIN_CAP)
+        crowding_cells[(record["region"], record["locality"], record["children"], record["quintile"], area_bin)] += 1
+        if record["quintile"] is not None:
+            for group in ("all", "with_children") if record["children"] else ("all",):
+                by_quintile[(group, record["quintile"])]["households"] += 1
+                by_quintile[(group, record["quintile"])]["crowded"] += crowded
+        groups = ["all"]
+        if crowded:
+            groups.append("crowded")
+            if record["quintile"] in (1, 2):
+                groups.append("crowded_low_income")
+        for group in groups:
+            reach[group]["households"] += 1
+            for name in PROGRAMMES:
+                reach[group][name] += name in record["programmes"]
+    income_values = [r["income_per_capita"] for r in records if r["income_per_capita"] is not None]
 
     return {
         "year": year,
@@ -159,11 +249,29 @@ def analyse_year(year: int):
         "median_living_area_per_person_by_size_m2": {
             group: median(values) for group, values in sorted(living_area_by_size.items())
         },
-        "crowding_cells_columns": ["region", "locality", "children", "area_per_person_bin", "households"],
+        "income_valid_households": len(income_values),
+        "median_money_income_per_capita_month_kzt": median(income_values),
+        "income_quintile_upper_bounds_kzt": [round(bound) for bound in bounds],
+        f"crowded_below_{CROWDING_THRESHOLD}_by_income_quintile": {
+            group: {
+                str(q): {
+                    "households": by_quintile[(group, q)]["households"],
+                    "crowded": by_quintile[(group, q)]["crowded"],
+                    "share": share(by_quintile[(group, q)]["crowded"], by_quintile[(group, q)]["households"]),
+                } for q in range(1, 6)
+            } for group in ("all", "with_children")
+        },
+        "programme_reach": {
+            group: {"households": counts["households"], **{
+                name: share(counts[name], counts["households"]) for name in PROGRAMMES
+            }} for group, counts in reach.items()
+        },
+        "crowding_cells_columns": ["region", "locality", "children", "income_quintile", "area_per_person_bin", "households"],
         "crowding_cells": [
-            [te, k, child, area_bin, count]
-            for (te, k, child, area_bin), count in sorted(
-                crowding_cells.items(), key=lambda item: (item[0][0], item[0][1], -1 if item[0][2] is None else item[0][2], item[0][3])
+            [*cell, count]
+            for cell, count in sorted(
+                crowding_cells.items(),
+                key=lambda item: tuple(-1 if value is None else value for value in item[0]),
             )
         ],
     }
@@ -176,6 +284,9 @@ def main():
         "regions_note": "TE decoded by two-digit KATO region codes; no TE codebook in the supplied documentation",
         "localities": LOCALITIES,
         "area_bin_note": f"Total area per person floored to whole m²; bin {AREA_BIN_CAP} means {AREA_BIN_CAP} m² and more",
+        "income_note": "Monthly money income per capita from D004 kv_vopr11: mean over quarters with REZ=1, divided by 3 and by the D008 household size; quintiles are unweighted within each year's households with valid area",
+        "income_items": {str(k): v for k, v in INCOME_ITEMS.items()},
+        "money_income_items": MONEY_INCOME_ITEMS,
         "years": [analyse_year(year) for year in range(2021, 2025)],
     }
     text = json.dumps(result, ensure_ascii=False, indent=2)
@@ -185,6 +296,8 @@ def main():
     for year in result["years"]:
         print(f"{year['year']}: {year['roster_households']} households, "
               f"{year['area_valid_households']} with valid area, "
+              f"{year['income_valid_households']} with income, "
+              f"median income per capita {year['median_money_income_per_capita_month_kzt']} KZT/month, "
               f"{len(year['crowding_cells'])} crowding cells")
     print(f"Wrote {OUT.name}")
 

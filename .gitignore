@@ -30,6 +30,11 @@ credentials.json
 /synthetic_microdata_2021-2024_20260921/*
 !/synthetic_microdata_2021-2024_20260921/d006/
 !/synthetic_microdata_2021-2024_20260921/d008/
+# From D004 only participation (kv_vopr0) and incomes (kv_vopr11) are used.
+!/synthetic_microdata_2021-2024_20260921/d004/
+/synthetic_microdata_2021-2024_20260921/d004/*/*/*.csv
+!/synthetic_microdata_2021-2024_20260921/d004/*/*/kv_vopr0.csv
+!/synthetic_microdata_2021-2024_20260921/d004/*/*/kv_vopr11.csv
 !/synthetic_microdata_2021-2024_20260921/documentation/
 !/synthetic_microdata_2021-2024_20260921/data-guide.html
 !/synthetic_microdata_2021-2024_20260921/data-guide.Rmd

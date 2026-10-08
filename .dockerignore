@@ -5,6 +5,7 @@
 !package-lock.json
 !vite.config.js
 !households_summary.json
+!model_results.json
 !scripts/
 !scripts/prepare-web.mjs
 !web/

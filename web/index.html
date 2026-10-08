@@ -19,6 +19,7 @@
       <nav class="navigation" aria-label="Основная навигация">
         <a href="#research">Исследование</a>
         <a href="#regions">Регионы</a>
+        <a href="#findings">Выводы</a>
         <a href="#methodology">Методология</a>
         <a href="#materials">Материалы <span aria-hidden="true">↗</span></a>
       </nav>
@@ -105,6 +106,11 @@
             <button type="button" data-locality="1" aria-pressed="false">Город</button>
             <button type="button" data-locality="2" aria-pressed="false">Село</button>
           </div></div>
+          <div class="filter"><span id="income-label">Доход на человека</span><div class="segmented" role="group" aria-labelledby="income-label">
+            <button type="button" data-income="all" aria-pressed="true">Любой</button>
+            <button type="button" data-income="q12" aria-pressed="false">Нижние 40%</button>
+            <button type="button" data-income="q1" aria-pressed="false">Нижние 20%</button>
+          </div></div>
         </div>
         <p id="family-note" class="filter-note" hidden>В 2021 году в составе домохозяйств нет года рождения, поэтому разрез по детям недоступен.</p>
 
@@ -128,7 +134,7 @@
           <div class="calculator-intro">
             <p class="card-kicker">КАЛЬКУЛЯТОР ЦЕЛЕВОЙ ГРУППЫ</p>
             <h3 id="calculator-title">Кого охватит программа с таким правилом?</h3>
-            <p>Правило адресности складывается из выбранных выше порога, типа семьи, местности и региона. Калькулятор показывает размер группы, её долю среди всех домохозяйств ниже порога и разницу с остальными домохозяйствами.</p>
+            <p>Правило адресности складывается из выбранных выше порога, типа семьи, местности, дохода и региона. Калькулятор показывает размер группы, её долю среди всех домохозяйств ниже порога и разницу с остальными домохозяйствами.</p>
             <label class="filter">Регион <select id="region-select" disabled><option value="all">Все регионы</option></select></label>
           </div>
           <div class="calculator-results">
@@ -140,11 +146,64 @@
           </div>
         </article>
         </div>
-        <p class="method-note"><span aria-hidden="true">ⓘ</span> Коды регионов (TE) расшифрованы по двузначным кодам КАТО: справочника в документации нет. Код местности: 1 — город, 2 — село (в Астане, Алматы и Шымкенте встречается только 1). В синтетических данных связи между признаками ослаблены примерно вдвое, поэтому разрывы между группами стоит читать как нижнюю границу. Группы меньше 30 домохозяйств не окрашиваются.</p>
+        <p class="method-note"><span aria-hidden="true">ⓘ</span> Коды регионов (TE) расшифрованы по двузначным кодам КАТО: справочника в документации нет. Код местности: 1 — город, 2 — село (в Астане, Алматы и Шымкенте встречается только 1). В синтетических данных связи между признаками ослаблены примерно вдвое, поэтому разрывы между группами стоит читать как нижнюю границу. Доход — среднемесячный денежный доход на человека по форме D004 (без натуральных поступлений и продажи имущества); «нижние 20% и 40%» — квинтили внутри выборки каждого года. Группы меньше 30 домохозяйств не окрашиваются.</p>
+      </section>
+
+      <section class="findings container section" id="findings" aria-labelledby="findings-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">03 / МОДЕЛЬ И РЕКОМЕНДАЦИИ</p><h2 id="findings-title">Жильё не растёт вместе с семьёй.</h2><p class="section-description">Логистическая регрессия на <span data-fill="households">—</span> домохозяйствах за 2022–2024 годы: как число детей меняет вероятность жить ниже 15 м² на человека при одинаковых доходе, числе взрослых, регионе, типе местности, жилья и собственности.</p></div>
+        </div>
+        <p id="findings-error" class="data-error" role="alert" hidden></p>
+
+        <div class="findings-grid" id="findings-results" aria-busy="true">
+          <article class="chart-card">
+            <div class="chart-heading"><div><p class="card-kicker">ПРОГНОЗ МОДЕЛИ</p><h3>Вероятность жить ниже нормы</h3></div><span class="unit-badge">% семей</span></div>
+            <p class="chart-subtitle">Городская семья из двух взрослых в собственной квартире с медианным доходом, среднее по регионам, 2024.</p>
+            <div id="probability-chart" class="probability-chart" role="img" aria-label="Вероятность жить ниже 15 м² на человека по числу детей"></div>
+            <div class="chart-footer"><span>Число детей до 18 лет · подпись под столбцом — во сколько раз выше шансы, чем без детей</span><span>Псевдо-R² <span data-fill="pseudo_r2">—</span></span></div>
+          </article>
+          <article class="chart-card">
+            <div class="chart-heading"><div><p class="card-kicker">МЕХАНИЗМ</p><h3>На сколько больше жильё у семей с детьми</h3></div><span class="unit-badge">% к семье без детей</span></div>
+            <div class="mechanism-legend"><span><i class="swatch-actual"></i>Фактически больше</span><span><i class="swatch-needed"></i>Нужно, чтобы площадь на человека не упала</span></div>
+            <div id="mechanism-chart" class="mechanism-chart" role="img" aria-label="Фактическое и необходимое увеличение площади жилья по числу детей"></div>
+            <div class="chart-footer"><span>Регрессия логарифма общей площади с теми же контролями · 95% ДИ в подсказке</span><span>Для семьи из двух взрослых</span></div>
+          </article>
+        </div>
+
+        <div class="fact-grid">
+          <article class="fact"><strong><span data-fill="income_effect">—</span> п.п.</strong><p>меняется вероятность стеснённости при удвоении дохода семьи. Без учёта состава семьи разрыв огромен (<span data-fill="q1_share">—</span> в нижнем квинтиле против <span data-fill="q5_share">—</span> в верхнем), но он почти целиком объясняется числом детей.</p></article>
+          <article class="fact"><strong>×<span data-fill="house_or">—</span></strong><p>шансы стеснённости в частном доме по сравнению с квартирой. Риск сосредоточен в многоквартирном жилье.</p></article>
+          <article class="fact"><strong><span data-fill="housing_reach">—</span></strong><p>стеснённых домохозяйств получают жилищную помощь, пособия на детей — <span data-fill="child_benefit_reach">—</span>. Существующие выплаты не связаны с нехваткой площади.</p></article>
+        </div>
+
+        <h3 class="recommendations-title">Рекомендации</h3>
+        <ol class="recommendations">
+          <li class="recommendation">
+            <h4>Сделать число детей главным критерием жилищной поддержки</h4>
+            <p class="evidence">При одинаковых доходе, регионе и типе жилья шансы жить ниже нормы выше в <b data-fill="or_1">—</b> раза у семьи с одним ребёнком, в <b data-fill="or_2">—</b> раза — с двумя и в <b data-fill="or_4">—</b> раз — с четырьмя и более.</p>
+            <p class="action">Давать приоритет в очередях и льготных программах по числу детей, а не только по статусу многодетной семьи: уже при двух детях вероятность стеснённости — <b data-fill="p_2">—</b>.</p>
+          </li>
+          <li class="recommendation">
+            <h4>Отбирать по площади на человека, а не только по доходу</h4>
+            <p class="evidence">Правило «семьи с детьми ниже 15 м² на человека» охватывает <b data-fill="coverage">—</b> всех стеснённых домохозяйств и отбирает <b data-fill="target">—</b> выборки. Доход сам по себе почти не отличает стеснённых от остальных.</p>
+            <p class="action">Сделать площадь на члена семьи обязательным критерием жилищных программ, доход — дополнительным фильтром для очерёдности. Размер и охват группы можно проверить в калькуляторе выше.</p>
+          </li>
+          <li class="recommendation">
+            <h4>Помочь жилью расти вместе с семьёй</h4>
+            <p class="evidence">Квартира семьи с двумя детьми больше, чем у бездетной, лишь на <b data-fill="area_2">—</b>, с четырьмя и более — на <b data-fill="area_4">—</b>, хотя для прежней площади на человека нужно +100% и +200%.</p>
+            <p class="action">Субсидировать обмен на большую квартиру или первоначальный взнос при рождении второго ребёнка; в арендном и социальном жилье закладывать квоту трёх- и четырёхкомнатных квартир.</p>
+          </li>
+          <li class="recommendation">
+            <h4>Распределять средства по региональному индексу и измерять его каждый год</h4>
+            <p class="evidence">Доля семей с детьми ниже нормы выше всего: <b data-fill="top_regions">—</b>; ниже всего: <b data-fill="bottom_region">—</b>. Разрыв почти вдвое.</p>
+            <p class="action">Включить долю домохозяйств ниже 15 м² на человека в официальную статистику с разбивкой по регионам и типу семьи; добавить в анкету D006 вопрос о постановке на жилищный учёт, чтобы сравнивать нужду с очередью.</p>
+          </li>
+        </ol>
+        <p class="method-note"><span aria-hidden="true">ⓘ</span> Синтетические данные без весов: связи между признаками в них ослаблены примерно вдвое, поэтому эффекты — нижняя граница реальных. Модель описывает связи, а не доказывает причинность. Слабая связь дохода с площадью может частично объясняться синтезом. Доля получателей выплат относится к <span data-fill="reach_year">—</span> году.</p>
       </section>
 
       <section class="methodology container section" id="methodology" aria-labelledby="method-title">
-        <div class="section-heading"><div><p class="eyebrow">03 / МЕТОДОЛОГИЯ</p><h2 id="method-title">Понятный путь от данных к выводу.</h2></div><span class="section-aside">Расчёты можно повторить</span></div>
+        <div class="section-heading"><div><p class="eyebrow">04 / МЕТОДОЛОГИЯ</p><h2 id="method-title">Понятный путь от данных к выводу.</h2></div><span class="section-aside">Расчёты можно повторить</span></div>
         <div class="steps-grid">
           <article class="step"><span class="step-number">01</span><h3>Соединяем формы</h3><p>Состав домохозяйства из D008 связываем с характеристиками жилья из D006 по ключу NOMER.</p></article>
           <article class="step"><span class="step-number">02</span><h3>Проверяем качество</h3><p>Для площади исключаем записи, где жилая площадь превышает общую. Проверяем дубликаты и состав домохозяйства.</p></article>
@@ -154,11 +213,12 @@
       </section>
 
       <section class="materials container section" id="materials" aria-labelledby="materials-title">
-        <div class="materials-copy"><p class="eyebrow">04 / МАТЕРИАЛЫ</p><h2 id="materials-title">Исследование<br />открыто для проверки.</h2><p>Презентация, итоговые показатели и код расчётов — чтобы пройти путь от вопроса до результата.</p></div>
+        <div class="materials-copy"><p class="eyebrow">05 / МАТЕРИАЛЫ</p><h2 id="materials-title">Исследование<br />открыто для проверки.</h2><p>Презентация, итоговые показатели и код расчётов — чтобы пройти путь от вопроса до результата.</p></div>
         <div class="resource-list">
           <a class="resource" href="/materials/StatDatathon.pdf" download><span class="resource-icon" aria-hidden="true">↧</span><span><strong>Презентация исследования</strong><small>PDF · готовые материалы проекта</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
           <a class="resource" href="/data/households.json" download><span class="resource-icon" aria-hidden="true">{ }</span><span><strong>Показатели за 2021–2024 годы</strong><small>JSON · агрегированные результаты</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
           <a class="resource" href="/data/regions.json" download><span class="resource-icon" aria-hidden="true">▦</span><span><strong>Регионы и целевые группы</strong><small>JSON · число домохозяйств по региону, местности, детям и площади</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
+          <a class="resource" href="/data/model.json" download><span class="resource-icon" aria-hidden="true">β</span><span><strong>Результаты модели</strong><small>JSON · отношения шансов, предельные эффекты, прогнозы и охват выплат</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
           <a class="resource" href="https://github.com/vl444dimir/datathon" target="_blank" rel="noopener noreferrer"><span class="resource-icon" aria-hidden="true">&lt;/&gt;</span><span><strong>Код и исходные материалы</strong><small>GitHub · воспроизводимые расчёты</small></span><span class="resource-arrow" aria-hidden="true">↗</span></a>
         </div>
       </section>

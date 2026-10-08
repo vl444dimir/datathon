@@ -8,6 +8,7 @@ on:
       - 'package*.json'
       - 'vite.config.js'
       - 'households_summary.json'
+      - 'model_results.json'
       - 'submission/StatDatathon.pdf'
       - 'Dockerfile'
       - '.dockerignore'
@@ -21,6 +22,7 @@ on:
       - 'package*.json'
       - 'vite.config.js'
       - 'households_summary.json'
+      - 'model_results.json'
       - 'submission/StatDatathon.pdf'
       - 'Dockerfile'
       - '.dockerignore'
@@ -57,6 +59,7 @@ jobs:
           curl -fsS http://127.0.0.1:8080/ > /dev/null
           curl -fsS http://127.0.0.1:8080/data/households.json > /dev/null
           curl -fsS http://127.0.0.1:8080/data/regions.json > /dev/null
+          curl -fsS http://127.0.0.1:8080/data/model.json > /dev/null
           curl -fsS http://127.0.0.1:8080/materials/StatDatathon.pdf > /dev/null
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/analysis_households.py)" = 404
           test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/.git/config)" = 403

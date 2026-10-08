@@ -1,5 +1,6 @@
 import './styles.css';
 import { initRegions } from './regions.js';
+import { initFindings } from './findings.js';
 
 const number = new Intl.NumberFormat('ru-RU');
 const decimal = new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -112,3 +113,4 @@ async function loadData() {
 
 loadData();
 initRegions();
+initFindings();

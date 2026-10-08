@@ -39,10 +39,43 @@ const regions = {
   }),
 };
 
+// Model results and policy figures for the "Модель и рекомендации" section.
+const modelResults = JSON.parse(await readFile(new URL('model_results.json', root), 'utf8'));
+const { full, dwelling_area: area } = modelResults.models;
+const childKey = (label) => `C(children, Treatment('0'))[T.${label}]`;
+const childLabels = ['1', '2', '3', '4+'];
+const latest = summary.years.at(-1);
+for (const field of ['programme_reach', 'crowded_below_15_by_income_quintile']) {
+  if (!(field in latest)) throw new Error(`Missing ${field} in ${latest.year}`);
+}
+const model = {
+  scope: modelResults.scope,
+  outcome: modelResults.outcome,
+  caveat: modelResults.caveat,
+  sample: modelResults.sample,
+  predicted: modelResults.predicted_crowding_pct_by_children,
+  children: childLabels.map((label) => ({
+    label,
+    odds_ratio: full.children_odds_ratios[childKey(label)],
+    marginal_effect_pp: full.average_marginal_effects_pp[childKey(label)],
+    area_difference: area.area_difference_pct_vs_no_children[childKey(label)],
+    area_needed_pct: area.needed_to_keep_area_per_person_pct[label],
+  })),
+  // AME of log income × ln 2 = percentage-point change for a doubling of household income.
+  income_effect_pp_per_doubling: Math.round(full.average_marginal_effects_pp.log_income * Math.LN2 * 10) / 10,
+  area_difference_pct_per_income_doubling: area.area_difference_pct_per_income_doubling,
+  house_odds_ratio: full.other_odds_ratios['dwelling[T.house]'],
+  pseudo_r2: full.pseudo_r2,
+  latest_year: latest.year,
+  programme_reach: latest.programme_reach,
+  crowded_by_income_quintile: latest.crowded_below_15_by_income_quintile.all,
+};
+
 await mkdir(new URL('data/', publicDir), { recursive: true });
 await mkdir(new URL('materials/', publicDir), { recursive: true });
 await writeFile(new URL('data/households.json', publicDir), `${JSON.stringify(data, null, 2)}\n`);
 await writeFile(new URL('data/regions.json', publicDir), `${JSON.stringify(regions)}\n`);
+await writeFile(new URL('data/model.json', publicDir), `${JSON.stringify(model, null, 2)}\n`);
 await copyFile(
   new URL('submission/StatDatathon.pdf', root),
   new URL('materials/StatDatathon.pdf', publicDir),

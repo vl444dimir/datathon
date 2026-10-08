@@ -1,0 +1,215 @@
+{
+  "scope": "Synthetic survey microdata 2022–2024, pooled, unweighted; HC1 robust standard errors",
+  "outcome": "Total area per person below 15 m²",
+  "caveat": "Synthesis roughly halves associations between variables; treat effects as lower bounds",
+  "sample": {
+    "households": 34827,
+    "crowded_share": 0.2937,
+    "median_household_income_month_kzt": 301075
+  },
+  "models": {
+    "children_only": {
+      "formula": "crowded ~ C(children, Treatment('0')) + C(year)",
+      "households": 34827,
+      "pseudo_r2": 0.265,
+      "children_odds_ratios": {
+        "C(children, Treatment('0'))[T.1]": {
+          "odds_ratio": 7.46,
+          "ci95": [
+            6.839,
+            8.138
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.2]": {
+          "odds_ratio": 20.04,
+          "ci95": [
+            18.334,
+            21.906
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.3]": {
+          "odds_ratio": 34.876,
+          "ci95": [
+            31.592,
+            38.502
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.4+]": {
+          "odds_ratio": 51.471,
+          "ci95": [
+            45.892,
+            57.729
+          ],
+          "p_value": 0.0
+        }
+      }
+    },
+    "full": {
+      "formula": "crowded ~ C(children, Treatment('0')) + log_income + C(adults) + urban + dwelling + tenure + C(region) + C(year)",
+      "households": 34827,
+      "pseudo_r2": 0.4,
+      "children_odds_ratios": {
+        "C(children, Treatment('0'))[T.1]": {
+          "odds_ratio": 6.487,
+          "ci95": [
+            5.906,
+            7.127
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.2]": {
+          "odds_ratio": 21.119,
+          "ci95": [
+            19.105,
+            23.345
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.3]": {
+          "odds_ratio": 46.053,
+          "ci95": [
+            40.939,
+            51.806
+          ],
+          "p_value": 0.0
+        },
+        "C(children, Treatment('0'))[T.4+]": {
+          "odds_ratio": 97.523,
+          "ci95": [
+            84.69,
+            112.3
+          ],
+          "p_value": 0.0
+        }
+      },
+      "income_odds_ratio_per_doubling": 1.067,
+      "other_odds_ratios": {
+        "urban": {
+          "odds_ratio": 1.208,
+          "ci95": [
+            1.105,
+            1.32
+          ],
+          "p_value": 3.18e-05
+        },
+        "dwelling[T.house]": {
+          "odds_ratio": 0.283,
+          "ci95": [
+            0.258,
+            0.31
+          ],
+          "p_value": 7.08e-159
+        },
+        "tenure[T.rent]": {
+          "odds_ratio": 1.236,
+          "ci95": [
+            0.988,
+            1.547
+          ],
+          "p_value": 0.064
+        },
+        "tenure[T.free]": {
+          "odds_ratio": 0.798,
+          "ci95": [
+            0.615,
+            1.035
+          ],
+          "p_value": 0.0894
+        },
+        "tenure[T.state]": {
+          "odds_ratio": 1.074,
+          "ci95": [
+            0.572,
+            2.016
+          ],
+          "p_value": 0.825
+        }
+      },
+      "average_marginal_effects_pp": {
+        "C(children, Treatment('0'))[T.1]": 21.7,
+        "C(children, Treatment('0'))[T.2]": 35.4,
+        "C(children, Treatment('0'))[T.3]": 44.4,
+        "C(children, Treatment('0'))[T.4+]": 53.1,
+        "log_income": 1.1,
+        "urban": 2.2
+      }
+    },
+    "dwelling_area": {
+      "formula": "log_area ~ C(children, Treatment('0')) + log_income + C(adults) + urban + dwelling + tenure + C(region) + C(year)",
+      "households": 34827,
+      "r2": 0.301,
+      "area_difference_pct_vs_no_children": {
+        "C(children, Treatment('0'))[T.1]": {
+          "pct": 1.0,
+          "ci95": [
+            0.0,
+            2.0
+          ]
+        },
+        "C(children, Treatment('0'))[T.2]": {
+          "pct": 4.5,
+          "ci95": [
+            3.4,
+            5.7
+          ]
+        },
+        "C(children, Treatment('0'))[T.3]": {
+          "pct": 7.8,
+          "ci95": [
+            6.3,
+            9.2
+          ]
+        },
+        "C(children, Treatment('0'))[T.4+]": {
+          "pct": 10.0,
+          "ci95": [
+            8.3,
+            11.8
+          ]
+        }
+      },
+      "area_difference_pct_per_income_doubling": -0.1,
+      "needed_to_keep_area_per_person_pct": {
+        "1": 50,
+        "2": 100,
+        "3": 150,
+        "4+": 200
+      }
+    }
+  },
+  "predicted_crowding_pct_by_children": {
+    "profile": "urban, two adults, owned apartment, median household income, averaged over regions, 2024",
+    "values": {
+      "0": 6.2,
+      "1": 28.9,
+      "2": 54.8,
+      "3": 71.0,
+      "4+": 82.9
+    }
+  },
+  "regions": {
+    "10": "Абайская",
+    "11": "Акмолинская",
+    "15": "Актюбинская",
+    "19": "Алматинская",
+    "23": "Атырауская",
+    "27": "Западно-Казахстанская",
+    "31": "Жамбылская",
+    "33": "Жетысуская",
+    "35": "Карагандинская",
+    "39": "Костанайская",
+    "43": "Кызылординская",
+    "47": "Мангистауская",
+    "55": "Павлодарская",
+    "59": "Северо-Казахстанская",
+    "61": "Туркестанская",
+    "62": "Улытауская",
+    "63": "Восточно-Казахстанская",
+    "71": "г. Астана",
+    "75": "г. Алматы",
+    "79": "г. Шымкент"
+  }
+}

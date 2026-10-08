@@ -29,8 +29,11 @@ const FAMILY_LABELS = {
   '4plus': 'многодетные семьи (4+ детей)',
 };
 const FAMILY_MIN = { children: 1, '3plus': 3, '4plus': 4 };
+// Highest income quintile (per-capita money income, D004) included by each filter.
+const INCOME_MAX = { q1: 1, q12: 2 };
+const INCOME_LABELS = { q1: 'с доходом в нижних 20%', q12: 'с доходом в нижних 40%' };
 
-const state = { data: null, year: null, threshold: 15, family: 'children', locality: 'all', region: 'all' };
+const state = { data: null, year: null, threshold: 15, family: 'children', locality: 'all', income: 'all', region: 'all' };
 const el = (id) => document.getElementById(id);
 
 function wilson(below, n) {
@@ -45,11 +48,12 @@ function wilson(below, n) {
 
 const percent = (value) => `${decimal.format(value * 100)}%`;
 
-function matches(cell, { family = 'all', locality = 'all', region = 'all' }) {
-  const [te, k, children] = cell;
+function matches(cell, { family = 'all', locality = 'all', income = 'all', region = 'all' }) {
+  const [te, k, children, quintile] = cell;
   if (region !== 'all' && te !== region) return false;
   if (locality !== 'all' && k !== locality) return false;
   if (family !== 'all' && (children === null || children < FAMILY_MIN[family])) return false;
+  if (income !== 'all' && (quintile === null || quintile > INCOME_MAX[income])) return false;
   return true;
 }
 
@@ -58,8 +62,8 @@ function aggregate(filter) {
   let below = 0;
   for (const cell of state.year.cells) {
     if (!matches(cell, filter)) continue;
-    n += cell[4];
-    if (cell[3] < state.threshold) below += cell[4];
+    n += cell[5];
+    if (cell[4] < state.threshold) below += cell[5];
   }
   return { n, below, share: n ? below / n : null };
 }
@@ -81,10 +85,14 @@ function colorFor(share) {
   return RAMP[classOf(share)];
 }
 
+function viewFilter() {
+  return { family: state.family, locality: state.locality, income: state.income };
+}
+
 function regionStats() {
   const present = new Set(state.year.cells.map((cell) => cell[0]));
   return Object.keys(state.data.regions).map((code) => {
-    const stats = aggregate({ family: state.family, locality: state.locality, region: code });
+    const stats = aggregate({ ...viewFilter(), region: code });
     return { code, name: state.data.regions[code], present: present.has(code), ...stats, ci: wilson(stats.below, stats.n) };
   });
 }
@@ -282,15 +290,21 @@ function renderRanking(rows, overall) {
   el('rank-list').replaceChildren(...items);
 }
 
+function describeGroup() {
+  const label = [FAMILY_LABELS[state.family], INCOME_LABELS[state.income], state.locality === 'all' ? '' : state.locality === '1' ? 'в городах' : 'в сёлах'].filter(Boolean).join(' ');
+  return `${label[0].toUpperCase()}${label.slice(1)}`;
+}
+
 function describeRule() {
   const parts = [FAMILY_LABELS[state.family]];
+  if (state.income !== 'all') parts.push(INCOME_LABELS[state.income]);
   if (state.locality !== 'all') parts.push(state.locality === '1' ? 'в городах' : 'в сёлах');
   parts.push(state.region === 'all' ? 'по всей стране' : `в регионе «${state.data.regions[state.region]}»`);
   return parts.join(' ');
 }
 
 function renderCalculator() {
-  const rule = { family: state.family, locality: state.locality, region: state.region };
+  const rule = { ...viewFilter(), region: state.region };
   const group = aggregate(rule);
   const all = aggregate({});
   const restN = all.n - group.n;
@@ -337,6 +351,9 @@ function render() {
   document.querySelectorAll('[data-locality]').forEach((button) => {
     button.setAttribute('aria-pressed', String(button.dataset.locality === state.locality));
   });
+  document.querySelectorAll('[data-income]').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.income === state.income));
+  });
   el('family-note').hidden = familyAvailable;
   if (state.region !== 'all' && !state.year.cells.some((cell) => cell[0] === state.region)) state.region = 'all';
   el('region-select').value = state.region;
@@ -344,14 +361,14 @@ function render() {
   el('map-title').textContent = `Доля домохозяйств ниже ${state.threshold} м² на человека`;
 
   const rows = regionStats();
-  const overall = aggregate({ family: state.family, locality: state.locality });
+  const overall = aggregate(viewFilter());
   setClasses(rows);
   renderLegend();
   renderMap(rows);
   renderRanking(rows, overall);
   renderCalculator();
   el('map-sample').textContent = overall.n
-    ? `${FAMILY_LABELS[state.family][0].toUpperCase()}${FAMILY_LABELS[state.family].slice(1)}: ${number.format(overall.n)}, в среднем ${percent(overall.share)} ниже порога`
+    ? `${describeGroup()}: ${number.format(overall.n)}, в среднем ${percent(overall.share)} ниже порога`
     : 'Нет домохозяйств с такими условиями';
 }
 
@@ -374,6 +391,10 @@ function bind() {
   }));
   document.querySelectorAll('[data-locality]').forEach((button) => button.addEventListener('click', () => {
     state.locality = button.dataset.locality;
+    render();
+  }));
+  document.querySelectorAll('[data-income]').forEach((button) => button.addEventListener('click', () => {
+    state.income = button.dataset.income;
     render();
   }));
 }
@@ -399,7 +420,7 @@ export async function initRegions() {
     const message = el('regions-error');
     message.textContent = 'Не удалось загрузить региональные данные. Обновите страницу или скачайте материалы ниже.';
     message.hidden = false;
-    document.querySelectorAll('[data-family], [data-locality]').forEach((button) => { button.disabled = true; });
+    document.querySelectorAll('[data-family], [data-locality], [data-income]').forEach((button) => { button.disabled = true; });
     el('map-sample').textContent = 'Показатели недоступны';
     console.error('Could not load regional data:', error);
   } finally {
