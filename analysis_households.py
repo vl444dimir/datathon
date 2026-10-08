@@ -10,6 +10,7 @@ import csv
 import json
 import statistics
 import math
+import re
 from decimal import Decimal, ROUND_HALF_UP
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -17,6 +18,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent / "synthetic_microdata_2021-2024_20260921"
 OUT = Path(__file__).parent / "households_summary.json"
+
+# TE has no codebook in documentation/; the codes match the two-digit KATO
+# region codes (Abai, Zhetysu and Ulytau appear from 2022, as in KATO).
+# K: only 1 occurs in the three cities of republican significance, so 1 = urban.
+REGIONS = {
+    "10": "Абайская", "11": "Акмолинская", "15": "Актюбинская", "19": "Алматинская",
+    "23": "Атырауская", "27": "Западно-Казахстанская", "31": "Жамбылская",
+    "33": "Жетысуская", "35": "Карагандинская", "39": "Костанайская",
+    "43": "Кызылординская", "47": "Мангистауская", "55": "Павлодарская",
+    "59": "Северо-Казахстанская", "61": "Туркестанская", "62": "Улытауская",
+    "63": "Восточно-Казахстанская", "71": "г. Астана", "75": "г. Алматы", "79": "г. Шымкент",
+}
+LOCALITIES = {"1": "город", "2": "село"}
+AREA_BIN_CAP = 60  # total m² per person, floored; the last bin means 60 and more
 
 
 def read_rows(path: Path):
@@ -66,6 +81,7 @@ def analyse_year(year: int):
     living_area_by_size = defaultdict(list)
     all_area_per_person = []
     inconsistent_area_households = 0
+    crowding_cells = Counter()
     valid_birth_years = 0
     children = 0
     households_with_child = 0
@@ -78,12 +94,16 @@ def analyse_year(year: int):
             size_mismatches += 1
 
         has_child = False
+        household_children = 0
+        household_births = 0
         for member in members:
             birth = member.get("GOD_ROJD", "")
             if birth.isdigit() and 1900 <= int(birth) <= year:
                 valid_birth_years += 1
+                household_births += 1
                 if year - int(birth) < 18:
                     children += 1
+                    household_children += 1
                     has_child = True
         households_with_child += has_child
 
@@ -100,6 +120,11 @@ def analyse_year(year: int):
             total_area_by_size[group].append(total)
             area_by_size[group].append(total / size)
             all_area_per_person.append(total / size)
+            # Children bucket 0-4 (4 = four or more, "многодетная" in Kazakhstan);
+            # None when the household has no usable birth years (all of 2021).
+            child_bucket = min(household_children, 4) if household_births else None
+            area_bin = min(math.floor(total / size), AREA_BIN_CAP)
+            crowding_cells[(dwelling["TE"], dwelling["K"], child_bucket, area_bin)] += 1
         if living is not None:
             living_area_by_size[group].append(living / size)
 
@@ -134,16 +159,34 @@ def analyse_year(year: int):
         "median_living_area_per_person_by_size_m2": {
             group: median(values) for group, values in sorted(living_area_by_size.items())
         },
+        "crowding_cells_columns": ["region", "locality", "children", "area_per_person_bin", "households"],
+        "crowding_cells": [
+            [te, k, child, area_bin, count]
+            for (te, k, child, area_bin), count in sorted(
+                crowding_cells.items(), key=lambda item: (item[0][0], item[0][1], -1 if item[0][2] is None else item[0][2], item[0][3])
+            )
+        ],
     }
 
 
 def main():
     result = {
         "scope": "Synthetic survey microdata; unweighted sample statistics",
+        "regions": REGIONS,
+        "regions_note": "TE decoded by two-digit KATO region codes; no TE codebook in the supplied documentation",
+        "localities": LOCALITIES,
+        "area_bin_note": f"Total area per person floored to whole m²; bin {AREA_BIN_CAP} means {AREA_BIN_CAP} m² and more",
         "years": [analyse_year(year) for year in range(2021, 2025)],
     }
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    text = json.dumps(result, ensure_ascii=False, indent=2)
+    # Keep flat arrays (crowding cells, file lists) on one line each.
+    text = re.sub(r"\[\s+([^\[\]{}]*?)\s+\]", lambda m: "[" + re.sub(r",\s+", ", ", m.group(1)) + "]", text)
+    OUT.write_text(text, encoding="utf-8")
+    for year in result["years"]:
+        print(f"{year['year']}: {year['roster_households']} households, "
+              f"{year['area_valid_households']} with valid area, "
+              f"{len(year['crowding_cells'])} crowding cells")
+    print(f"Wrote {OUT.name}")
 
 
 if __name__ == "__main__":

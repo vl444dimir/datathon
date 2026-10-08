@@ -21,9 +21,28 @@ const data = {
   }))),
 };
 
+// Region × locality × children × area-per-person counts for the map and the calculator.
+for (const field of ['regions', 'regions_note', 'localities', 'area_bin_note']) {
+  if (!(field in summary)) throw new Error(`Missing ${field} in summary`);
+}
+const regions = {
+  scope: summary.scope,
+  regions: summary.regions,
+  regions_note: summary.regions_note,
+  localities: summary.localities,
+  area_bin_note: summary.area_bin_note,
+  years: summary.years.map((year) => {
+    for (const field of ['crowding_cells_columns', 'crowding_cells']) {
+      if (!(field in year)) throw new Error(`Missing ${field} in ${year.year}`);
+    }
+    return { year: year.year, columns: year.crowding_cells_columns, cells: year.crowding_cells };
+  }),
+};
+
 await mkdir(new URL('data/', publicDir), { recursive: true });
 await mkdir(new URL('materials/', publicDir), { recursive: true });
 await writeFile(new URL('data/households.json', publicDir), `${JSON.stringify(data, null, 2)}\n`);
+await writeFile(new URL('data/regions.json', publicDir), `${JSON.stringify(regions)}\n`);
 await copyFile(
   new URL('submission/StatDatathon.pdf', root),
   new URL('materials/StatDatathon.pdf', publicDir),
