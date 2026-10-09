@@ -53,6 +53,9 @@ def household_rows(year: int):
         yield {
             "year": year,
             "crowded": int(total / len(members) < CROWDING_THRESHOLD),
+            "crowded_18": int(total / len(members) < 18),
+            "living_per_person": living / len(members) if living is not None else None,
+            "living_share": living / total if living is not None else None,
             "log_area": math.log(total),
             "children": str(min(children, 4)) if children < 4 else "4+",
             "adults": min(len(members) - children, 5),
@@ -75,6 +78,50 @@ def odds_table(result, prefix):
                 "p_value": float(f"{result.pvalues[name]:.3g}"),
             }
     return table
+
+
+def robustness(frame, children):
+    """Re-fit the full model with another threshold, another area measure, in subsamples and by year."""
+    controls = ["log_income", "C(adults)", "urban", "dwelling", "tenure", "C(region)", "C(year)"]
+    # Living area is about this share of total area, so the same norm in living m² is:
+    living_threshold = round(CROWDING_THRESHOLD * float(frame["living_share"].median()), 1)
+    frame = frame.assign(crowded_living=(frame["living_per_person"] < living_threshold).astype(int))
+    has_living = frame["living_per_person"].notna()
+    checks = [
+        ("baseline", f"Общая площадь < {CROWDING_THRESHOLD} м², все домохозяйства", "crowded", None, []),
+        ("threshold_18", "Порог 18 м² (верхняя граница нормы)", "crowded_18", None, []),
+        ("living_area", f"Жилая площадь < {living_threshold:g} м²".replace(".", ",") + " (тот же норматив в жилых м²)", "crowded_living", has_living, []),
+        ("urban", "Только город", "crowded", frame["urban"] == 1, ["urban"]),
+        ("rural", "Только село", "crowded", frame["urban"] == 0, ["urban"]),
+        ("apartment", "Только квартиры", "crowded", frame["dwelling"] == "apartment", ["dwelling"]),
+        ("house", "Только частные дома", "crowded", frame["dwelling"] == "house", ["dwelling"]),
+        *[(f"year_{year}", f"Только {year} год", "crowded", frame["year"] == year, ["C(year)"]) for year in YEARS],
+    ]
+    results = {}
+    for key, label, outcome, mask, dropped in checks:
+        data = frame if mask is None else frame[mask]
+        data = data.assign(
+            dwelling=data["dwelling"].cat.remove_unused_categories(),
+            tenure=data["tenure"].cat.remove_unused_categories(),
+        )
+        formula = f"{outcome} ~ {children} + " + " + ".join(term for term in controls if term not in dropped)
+        fit = smf.logit(formula, data=data).fit(disp=False, cov_type="HC1", maxiter=200)
+        if not fit.mle_retvals["converged"]:
+            raise RuntimeError(f"robustness check {key} did not converge")
+        odds = odds_table(fit, "C(children")
+        results[key] = {
+            "label": label,
+            "households": int(fit.nobs),
+            "outcome_share": round(float(data[outcome].mean()), 4),
+            "children_odds_ratios": {name.split("[T.")[1].rstrip("]"): values for name, values in odds.items()},
+            # Expected share below the norm if every household in the sample had this
+            # many children, everything else unchanged (average predicted probability, %).
+            "expected_share_pct_by_children": {
+                level: round(float(fit.predict(data.assign(children=level)).mean()) * 100, 1)
+                for level in ["0", "1", "2", "3", "4+"]
+            },
+        }
+    return {"living_threshold_m2": living_threshold, "checks": results}
 
 
 def main():
@@ -167,6 +214,7 @@ def main():
             "profile": "urban, two adults, owned apartment, median household income, averaged over regions, 2024",
             "values": predictions,
         },
+        "robustness": robustness(frame, children),
         "regions": REGIONS,
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -178,6 +226,10 @@ def main():
     print("income OR per doubling", models["full"]["income_odds_ratio_per_doubling"])
     print("other", models["full"]["other_odds_ratios"])
     print("AME pp", models["full"]["average_marginal_effects_pp"])
+    print("robustness: living threshold", result["robustness"]["living_threshold_m2"])
+    for key, check in result["robustness"]["checks"].items():
+        ors = ", ".join(f"{k}: {v['odds_ratio']:.1f} [{v['ci95'][0]:.1f}–{v['ci95'][1]:.1f}]" for k, v in check["children_odds_ratios"].items())
+        print(f"  {key:13} n={check['households']:6} share={check['outcome_share']:.3f}  {ors}")
     print("area", models["dwelling_area"]["area_difference_pct_vs_no_children"], models["dwelling_area"]["area_difference_pct_per_income_doubling"], models["dwelling_area"]["r2"])
 
 

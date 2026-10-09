@@ -66,6 +66,7 @@ const model = {
   area_difference_pct_per_income_doubling: area.area_difference_pct_per_income_doubling,
   house_odds_ratio: full.other_odds_ratios['dwelling[T.house]'],
   pseudo_r2: full.pseudo_r2,
+  robustness: modelResults.robustness,
   latest_year: latest.year,
   programme_reach: latest.programme_reach,
   crowded_by_income_quintile: latest.crowded_below_15_by_income_quintile.all,

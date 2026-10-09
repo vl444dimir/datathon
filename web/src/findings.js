@@ -77,6 +77,24 @@ function childRule(cells) {
   return { all, allBelow, group, groupBelow, regions };
 }
 
+function renderRobustness(model) {
+  const labels = ['1', '2', '3', '4+'];
+  el('robustness-body').replaceChildren(...Object.entries(model.robustness.checks).map(([key, check]) => {
+    const row = node('tr', key === 'baseline' ? 'is-baseline' : '');
+    row.append(node('th', '', check.label), node('td', '', number.format(check.households)));
+    row.firstChild.scope = 'row';
+    for (const label of ['0', ...labels]) {
+      const cell = node('td', label === '0' ? 'is-base' : '', pct(check.expected_share_pct_by_children[label], 0));
+      const odds = check.children_odds_ratios[label];
+      cell.title = odds
+        ? `Шансы в ${times(odds.odds_ratio)} раза выше, чем без детей (95% ДИ ${times(odds.ci95[0])}–${times(odds.ci95[1])})`
+        : 'База сравнения';
+      row.append(cell);
+    }
+    return row;
+  }));
+}
+
 function renderFacts(model, regionData) {
   const latest = regionData.years.at(-1);
   const rule = childRule(latest.cells);
@@ -121,6 +139,7 @@ export async function initFindings() {
     renderProbability(model);
     renderMechanism(model);
     renderFacts(model, regionData);
+    renderRobustness(model);
   } catch (error) {
     const message = el('findings-error');
     message.textContent = 'Не удалось загрузить результаты модели. Обновите страницу или скачайте материалы ниже.';
